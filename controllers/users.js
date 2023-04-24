@@ -53,7 +53,7 @@ module.exports.updateProfile = (req, res) => {
       message: "Не заполнено обязательное поле/данные введены некорректно",
     });
   }
-  User.findByIdAndUpdate({ _id: req.user._id }, { name, about })
+  User.findByIdAndUpdate({ _id: req.user._id }, { name, about }, { new: true })
     .then((user) => {
       if (!user) {
         res.status(404).send({ message: "Пользователь с таким id не найден" });
@@ -79,7 +79,7 @@ module.exports.updateAvatar = (req, res) => {
       message: "Не заполнено обязательное поле/данные введены некорректно",
     });
   }
-  User.findByIdAndUpdate({ _id: req.user._id }, { avatar })
+  User.findByIdAndUpdate({ _id: req.user._id }, { avatar }, { new: true })
     .then((user) => {
       if (!user) {
         res.status(404).send({ message: "Пользователь с таким id не найден" });
