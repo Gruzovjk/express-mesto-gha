@@ -1,0 +1,32 @@
+{
+  "name": "express-mesto-gha",
+  "version": "1.0.0",
+  "description": "Проект Mesto фронтенд + бэкенд",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "npx eslint .",
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Gruzovjk/express-mesto-gha.git"
+  },
+  "keywords": [],
+  "author": "Egor Filimonov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Gruzovjk/express-mesto-gha/issues"
+  },
+  "homepage": "https://github.com/Gruzovjk/express-mesto-gha#readme",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "express": "^4.18.2",
+    "mongoose": "^7.0.4",
+    "path": "^0.12.7"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}
