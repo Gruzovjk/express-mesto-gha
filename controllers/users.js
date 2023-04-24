@@ -18,7 +18,7 @@ module.exports.getUserById = (req, res) => {
       }
     })
     .catch((err) => {
-      if (err.name === "CastError") {
+      if (err instanceof CastError) {
         res.status(400).send({ message: "Некорректный id" });
       } else {
         res.status(500).send({ message: "Ошибка сервера" });
@@ -29,17 +29,27 @@ module.exports.getUserById = (req, res) => {
 module.exports.createUser = (req, res) => {
   const { name, about, avatar } = req.body;
   if (!name || !about || !avatar) {
-    return res.status(400).send({ message: "Не заполнено обязательное поле" });
+    return res.status(400).send({
+      message: "Не заполнено обязательное поле/данные введены некорректно",
+    });
   }
   User.create({ name, about, avatar })
     .then((user) => res.status(200).send({ data: user }))
-    .catch(() => res.status(500).send({ message: "Ошибка сервера" }));
+    .catch((err) => {
+      if (err instanceof ValidationError || err instanceof CastError) {
+        res.status(400).send({ message: "Некорректный id" });
+      } else {
+        res.status(500).send({ message: "Ошибка сервера" });
+      }
+    });
 };
 
 module.exports.updateProfile = (req, res) => {
   const { name, about } = req.body;
   if (!name || !about) {
-    return res.status(400).send({ message: "Не заполнено обязательное поле" });
+    return res.status(400).send({
+      message: "Не заполнено обязательное поле/данные введены некорректно",
+    });
   }
   User.findByIdAndUpdate({ _id: req.user._id }, { name, about })
     .then((user) => {
@@ -50,7 +60,7 @@ module.exports.updateProfile = (req, res) => {
       }
     })
     .catch((err) => {
-      if (err.name === "CastError") {
+      if (err instanceof ValidationError || err instanceof CastError) {
         res.status(400).send({ message: "Некорректный id" });
       } else {
         res.status(500).send({ message: "Ошибка сервера" });
@@ -61,7 +71,9 @@ module.exports.updateProfile = (req, res) => {
 module.exports.updateAvatar = (req, res) => {
   const { avatar } = req.body;
   if (!avatar) {
-    return res.status(400).send({ message: "Не заполнено обязательное поле" });
+    return res.status(400).send({
+      message: "Не заполнено обязательное поле/данные введены некорректно",
+    });
   }
   User.findByIdAndUpdate({ _id: req.user._id }, { avatar })
     .then((user) => {
@@ -72,7 +84,7 @@ module.exports.updateAvatar = (req, res) => {
       }
     })
     .catch((err) => {
-      if (err.name === "CastError") {
+      if (err instanceof ValidationError || err instanceof CastError) {
         res.status(400).send({ message: "Некорректный id" });
       } else {
         res.status(500).send({ message: "Ошибка сервера" });

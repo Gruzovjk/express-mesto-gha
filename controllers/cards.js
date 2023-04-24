@@ -17,7 +17,13 @@ module.exports.createCard = (req, res) => {
 
   Card.create({ name, link })
     .then((card) => res.status(200).send({ data: card }))
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch((err) => {
+      if (err instanceof ValidationError || err instanceof CastError) {
+        res.status(400).send({ message: "Некорректный id" });
+      } else {
+        res.status(500).send({ message: "Ошибка сервера" });
+      }
+    });
 };
 
 module.exports.removeCardById = (req, res) => {
@@ -31,7 +37,7 @@ module.exports.removeCardById = (req, res) => {
       }
     })
     .catch((err) => {
-      if (err.name === "CastError") {
+      if (err instanceof CastError) {
         res.status(400).send({ message: "Некорректный id" });
       } else {
         res.status(500).send({ message: "Ошибка сервера" });
@@ -53,7 +59,7 @@ module.exports.likeCard = (req, res) => {
       }
     })
     .catch((err) => {
-      if (err.name === "CastError") {
+      if (err instanceof CastError) {
         res.status(400).send({ message: "Некорректный id" });
       } else {
         res.status(500).send({ message: "Ошибка сервера" });
@@ -75,7 +81,7 @@ module.exports.dislikeCard = (req, res) => {
       }
     })
     .catch((err) => {
-      if (err.name === "CastError") {
+      if (err instanceof CastError) {
         res.status(400).send({ message: "Некорректный id" });
       } else {
         res.status(500).send({ message: "Ошибка сервера" });
