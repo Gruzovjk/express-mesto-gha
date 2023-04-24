@@ -3,7 +3,9 @@ const User = require('../models/user');
 module.exports.getUsers = (req, res) => {
   User.find({})
     .then((users) => res.status(200).send({ data: users }))
-    .catch(() => res.status(500).send({ message: 'Ошибка сервера' }));
+    .catch(() =>
+      res.status(500).send({ message: 'На сервере произошла ошибка' }),
+    );
 };
 
 module.exports.getUserById = (req, res) => {
@@ -20,7 +22,7 @@ module.exports.getUserById = (req, res) => {
       if (err.name === 'CastError') {
         res.status(400).send({ message: 'Некорректный id' });
       } else {
-        res.status(500).send({ message: 'Ошибка сервера' });
+        res.status(500).send({ message: 'На сервере произошла ошибка' });
       }
     });
 };
@@ -40,7 +42,7 @@ module.exports.createUser = (req, res) => {
           .status(400)
           .send({ message: 'Некорректный id или неправильно заполнены поля' });
       } else {
-        res.status(500).send({ message: 'Ошибка сервера' });
+        res.status(500).send({ message: 'На сервере произошла ошибка' });
       }
     });
   return null;
@@ -67,7 +69,7 @@ module.exports.updateProfile = (req, res) => {
           .status(400)
           .send({ message: 'Некорректный id или неправильно заполнены поля' });
       } else {
-        res.status(500).send({ message: 'Ошибка сервера' });
+        res.status(500).send({ message: 'На сервере произошла ошибка' });
       }
     });
   return null;
@@ -94,7 +96,7 @@ module.exports.updateAvatar = (req, res) => {
           .status(400)
           .send({ message: 'Некорректный id или неправильно заполнены поля' });
       } else {
-        res.status(500).send({ message: 'Ошибка сервера' });
+        res.status(500).send({ message: 'На сервере произошла ошибка' });
       }
     });
   return null;
