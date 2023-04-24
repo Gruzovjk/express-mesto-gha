@@ -36,8 +36,10 @@ module.exports.createUser = (req, res) => {
   User.create({ name, about, avatar })
     .then((user) => res.status(200).send({ data: user }))
     .catch((err) => {
-      if (err instanceof ValidationError || err instanceof CastError) {
-        res.status(400).send({ message: "Некорректный id" });
+      if (err.name === "ValidationError" || err instanceof CastError) {
+        res
+          .status(400)
+          .send({ message: "Некорректный id или неправильно заполнены поля" });
       } else {
         res.status(500).send({ message: "Ошибка сервера" });
       }
@@ -60,8 +62,10 @@ module.exports.updateProfile = (req, res) => {
       }
     })
     .catch((err) => {
-      if (err instanceof ValidationError || err instanceof CastError) {
-        res.status(400).send({ message: "Некорректный id" });
+      if (err.name === "ValidationError" || err instanceof CastError) {
+        res
+          .status(400)
+          .send({ message: "Некорректный id или неправильно заполнены поля" });
       } else {
         res.status(500).send({ message: "Ошибка сервера" });
       }
@@ -84,8 +88,10 @@ module.exports.updateAvatar = (req, res) => {
       }
     })
     .catch((err) => {
-      if (err instanceof ValidationError || err instanceof CastError) {
-        res.status(400).send({ message: "Некорректный id" });
+      if (err.name === "ValidationError" || err instanceof CastError) {
+        res
+          .status(400)
+          .send({ message: "Некорректный id или неправильно заполнены поля" });
       } else {
         res.status(500).send({ message: "Ошибка сервера" });
       }
