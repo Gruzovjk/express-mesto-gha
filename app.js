@@ -1,21 +1,23 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+// eslint-disable-next-line import/no-extraneous-dependencies
+const helmet = require('helmet');
+// eslint-disable-next-line import/no-extraneous-dependencies
+const cookieParser = require('cookie-parser');
 
-const { PORT = 3000 } = process.env;
 const app = express();
+const { PORT, DB_CONN } = process.env;
+mongoose.connect(DB_CONN);
+
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: false }));
-mongoose.connect('mongodb://localhost:27017/mestodb');
-
-app.use((req, res, next) => {
-  req.user = {
-    _id: '6445618b1c013e21db4843a5',
-  };
-
-  next();
-});
+app.use(cookieParser());
+app.use(helmet());
 
 app.use(require('./routes/index'));
+
+app.use(require('./middlewares/standartError'));
 
 app.listen(PORT);
