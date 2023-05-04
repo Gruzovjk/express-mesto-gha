@@ -1,11 +1,16 @@
 const router = require('express').Router();
+const { validateSignUp, validateSignIn } = require('../middlewares/validator');
 
 const usersRoutes = require('./users');
 const cardsRoutes = require('./cards');
+const { createUser, login } = require('../controllers/users');
+const auth = require('../middlewares/auth');
 
-router.use('/users', usersRoutes);
-router.use('/cards', cardsRoutes);
-router.use('*', (req, res) => {
+router.post('/signup', validateSignUp, createUser);
+router.post('/signin', validateSignIn, login);
+router.use('/users', auth, usersRoutes);
+router.use('/cards', auth, cardsRoutes);
+router.use('*', auth, (req, res) => {
   res.status(404).send({ message: 'По указанному url ничего нет' });
 });
 
