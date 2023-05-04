@@ -100,7 +100,6 @@ module.exports.updateAvatar = (req, res) => {
   User.findByIdAndUpdate({ _id: req.user._id }, { avatar }, { new: true })
     .then((user) => {
       if (!user) {
-        // throw new NotFoundError('Нет пользователя с таким id');
         res.status(404).send({ message: 'Пользователь с таким id не найден' });
       } else {
         res.status(200).send({ user });
@@ -118,37 +117,32 @@ module.exports.updateAvatar = (req, res) => {
   return null;
 };
 
-module.exports.login = (req, res, next) => {
+module.exports.login = (req, res) => {
   const { email, password } = req.body;
 
-  User.findUserByCredentials(email, password)
-    .then((user) => {
-      const token = jwt.sign(
-        { _id: user._id },
-        NODE_ENV === 'production' ? JWT_SECRET : 'super-strong-secret',
-        {
-          expiresIn: '7d',
-        },
-      );
-      res
-        .cookie('jwt', token, {
-          maxAge: 3600000,
-          httpOnly: true,
-          sameSite: true,
-        })
-        .send({ token });
-    })
-    .catch(next);
+  User.findUserByCredentials(email, password).then((user) => {
+    const token = jwt.sign(
+      { _id: user._id },
+      NODE_ENV === 'production' ? JWT_SECRET : 'super-strong-secret',
+      {
+        expiresIn: '7d',
+      },
+    );
+    res
+      .cookie('jwt', token, {
+        maxAge: 3600000,
+        httpOnly: true,
+        sameSite: true,
+      })
+      .send({ token });
+  });
 };
 
-module.exports.getCurrentUser = (req, res, next) => {
-  User.findById(req.user._id)
-    .then((user) => {
-      if (!user) {
-        res.status(404).send({ message: 'Пользователь с таким id не найден' });
-        // return next(new NotFoundError('Пользователь по указанному _id не найден'));
-      }
-      return res.send({ user });
-    })
-    .catch(next);
+module.exports.getCurrentUser = (req, res) => {
+  User.findById(req.user._id).then((user) => {
+    if (!user) {
+      res.status(404).send({ message: 'Пользователь с таким id не найден' });
+    }
+    return res.send({ user });
+  });
 };

@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 // eslint-disable-next-line import/no-extraneous-dependencies
 const { compare } = require('bcrypt');
-const { AuthError } = require('../errors/index');
 
 const regex = require('../utils/regex');
 
@@ -47,23 +46,22 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-userSchema.statics.findUserByCredentials = function (email, password, next) {
+userSchema.statics.findUserByCredentials = function (email, password, res) {
   return this.findOne({ email })
     .select('+password')
     .then((user) => {
       if (!user) {
-        throw new AuthError('Неправильные почта или пароль');
+        res.status(404).send({ message: 'Неправильные почта или пароль' });
       }
 
       return compare(password, user.password).then((matched) => {
         if (!matched) {
-          throw new AuthError('Неправильные почта или пароль');
+          res.status(404).send({ message: 'Неправильные почта или пароль' });
         }
 
         return user;
       });
-    })
-    .catch(next);
+    });
 };
 
 module.exports = mongoose.model('user', userSchema);

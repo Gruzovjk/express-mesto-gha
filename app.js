@@ -16,8 +16,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(helmet());
 
-app.use(require('./routes/index'));
-
-app.use(require('./middlewares/standartError'));
+app.use(require('./routes/routes-index'));
 
 app.listen(PORT);

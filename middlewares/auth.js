@@ -1,7 +1,6 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
-const { AuthError } = require('../errors/index');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
@@ -9,7 +8,7 @@ module.exports = (req, res, next) => {
   const token = req.cookies.jwt;
 
   if (!token) {
-    throw new AuthError('Требуется авторизация');
+    res.status(401).send({ message: 'Требуется авторизация' });
   }
 
   let payload;
