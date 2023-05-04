@@ -6,6 +6,8 @@ const bodyParser = require('body-parser');
 const helmet = require('helmet');
 // eslint-disable-next-line import/no-extraneous-dependencies
 const cookieParser = require('cookie-parser');
+// eslint-disable-next-line import/no-extraneous-dependencies
+const errorsHandler = require('./middlewares/errorsHandler');
 
 const app = express();
 const { PORT, DB_CONN } = process.env;
@@ -16,6 +18,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(helmet());
 
-app.use(require('./routes/routes-index'));
+app.use(require('./routes'));
+
+app.use(errorsHandler);
 
 app.listen(PORT);

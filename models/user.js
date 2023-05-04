@@ -3,8 +3,8 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 // eslint-disable-next-line import/no-extraneous-dependencies
 const { compare } = require('bcrypt');
-
-const regex = require('../utils/regex');
+// const { AuthError } = require('../errors/index');
+const { regex } = require('../utils/regex');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -24,10 +24,10 @@ const userSchema = new mongoose.Schema({
     default:
       'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
     validate: {
-      validator(data) {
-        return regex.test(data);
+      validator(avatar) {
+        return regex.test(avatar);
       },
-      message: 'Некорректная ссылка',
+      message: (props) => `${props.value} некорректная ссылка!`,
     },
   },
   email: {
@@ -46,6 +46,7 @@ const userSchema = new mongoose.Schema({
   },
 });
 
+// eslint-disable-next-line func-names
 userSchema.statics.findUserByCredentials = function (email, password, res) {
   return this.findOne({ email })
     .select('+password')
