@@ -63,7 +63,18 @@ module.exports.createUser = (req, res, next) => {
         email,
         password: dataHash,
       })
-        .then((user) => res.status(200).send({ user }))
+        .then(
+          (user) =>
+            // eslint-disable-next-line implicit-arrow-linebreak
+            res.status(200).send({
+              name: user.name,
+              about: user.about,
+              avatar: user.avatar,
+              email: user.email,
+              _id: user._id,
+            }),
+          // eslint-disable-next-line function-paren-newline
+        )
         .catch((err) => {
           if (err.name === 'ValidationError' || err.name === 'CastError') {
             const error = new BadRequestError(
