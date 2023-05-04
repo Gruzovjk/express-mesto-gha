@@ -1,6 +1,10 @@
 const Card = require('../models/card');
 
-const { AuthError, NotFoundError, CastError } = require('../errors/index');
+const {
+  ForbiddenError,
+  NotFoundError,
+  BadRequestError,
+} = require('../errors/index');
 
 module.exports.getCards = (req, res, next) => {
   Card.find({})
@@ -14,7 +18,7 @@ module.exports.createCard = (req, res, next) => {
     .then((card) => res.status(200).send({ card }))
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
-        const error = new CastError('Некорректная ссылка на картинку');
+        const error = new BadRequestError('Некорректная ссылка на картинку');
         return next(error);
       }
       return next(err);
@@ -31,14 +35,14 @@ module.exports.removeCardById = (req, res, next) => {
         return next(error);
       }
       if (!card.owner.equals(req.user._id)) {
-        const error = new AuthError('Нельзя удалить чужую карточку');
+        const error = new ForbiddenError('Нельзя удалить чужую карточку');
         return next(error);
       }
       return res.status(200).send({ message: 'Карточка успешно удалена' });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        const error = new CastError('Некорректный id');
+        const error = new BadRequestError('Некорректный id');
         return next(error);
       }
       return next(err);
@@ -61,7 +65,7 @@ module.exports.likeCard = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        const error = new CastError('Некорректный id');
+        const error = new BadRequestError('Некорректный id');
         return next(error);
       }
       return next(err);
@@ -84,7 +88,7 @@ module.exports.dislikeCard = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        const error = new CastError('Некорректный id');
+        const error = new BadRequestError('Некорректный id');
         return next(error);
       }
       return next(err);

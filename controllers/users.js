@@ -5,7 +5,11 @@ const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
-const { DuplicateError, NotFoundError, CastError } = require('../errors/index');
+const {
+  ConflictingRequestError,
+  NotFoundError,
+  BadRequestError,
+} = require('../errors/index');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
@@ -27,7 +31,7 @@ module.exports.getUserById = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        const error = new CastError('Некорректный id');
+        const error = new BadRequestError('Некорректный id');
         return next(error);
       }
       return next(err);
@@ -62,13 +66,13 @@ module.exports.createUser = (req, res, next) => {
         .then((user) => res.status(200).send({ user }))
         .catch((err) => {
           if (err.name === 'ValidationError' || err.name === 'CastError') {
-            const error = new CastError(
+            const error = new BadRequestError(
               'Некорректный id или неправильно заполнены поля',
             );
             return next(error);
           }
           if (err.code === 11000) {
-            const error = new DuplicateError(
+            const error = new ConflictingRequestError(
               'Пользователь с таким e-mail уже существует',
             );
             return next(error);
@@ -119,7 +123,7 @@ module.exports.updateProfile = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
-        const error = new CastError(
+        const error = new BadRequestError(
           'Некорректный id или неправильно заполнены поля',
         );
         return next(error);
@@ -145,7 +149,7 @@ module.exports.updateAvatar = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
-        const error = new CastError('Некорректная ссылка на картинку');
+        const error = new BadRequestError('Некорректная ссылка на картинку');
         return next(error);
       }
       return next(err);

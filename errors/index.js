@@ -1,13 +1,15 @@
-const AuthError = require('./auth-error');
-const CastError = require('./cast-error');
-const NotFoundError = require('./not-found-error');
-const ServerError = require('./server-error');
-const DuplicateError = require('./duplicate-error');
+const UnauthorizedError = require('./unauth');
+const BadRequestError = require('./bad-req');
+const NotFoundError = require('./not-found');
+const InternalServerError = require('./internal-server');
+const ConflictingRequestError = require('./conflicting-req');
+const ForbiddenError = require('./forbidden');
 
 module.exports = {
-  AuthError,
-  CastError,
+  UnauthorizedError,
+  BadRequestError,
   NotFoundError,
-  ServerError,
-  DuplicateError,
+  InternalServerError,
+  ConflictingRequestError,
+  ForbiddenError,
 };

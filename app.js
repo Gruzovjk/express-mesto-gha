@@ -7,6 +7,7 @@ const helmet = require('helmet');
 // eslint-disable-next-line import/no-extraneous-dependencies
 const cookieParser = require('cookie-parser');
 // eslint-disable-next-line import/no-extraneous-dependencies
+const { errors } = require('celebrate');
 const errorsHandler = require('./middlewares/errorsHandler');
 
 const app = express();
@@ -20,6 +21,7 @@ app.use(helmet());
 
 app.use(require('./routes'));
 
+app.use(errors());
 app.use(errorsHandler);
 
 app.listen(PORT);
