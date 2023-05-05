@@ -21,7 +21,7 @@ module.exports.createCard = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         const error = new BadRequestError(
-          `Переданы некорректные данные - ${err.name}`,
+          `Переданы некорректные данные - ${err.name - err.message}`,
         );
         return next(error);
       }

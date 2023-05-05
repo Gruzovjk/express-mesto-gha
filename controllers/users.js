@@ -75,7 +75,9 @@ module.exports.createUser = (req, res, next) => {
         .catch((err) => {
           if (err.name === 'ValidationError') {
             const error = new BadRequestError(
-              `Некорректный id или неправильно заполнены поля - ${err.name}`,
+              `Некорректный id или неправильно заполнены поля - ${
+                err.name - err.message
+              }`,
             );
             return next(error);
           }
@@ -132,7 +134,9 @@ module.exports.updateProfile = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
         const error = new BadRequestError(
-          `Некорректный id или неправильно заполнены поля - ${err.name}`,
+          `Некорректный id или неправильно заполнены поля - ${
+            err.name - err.message
+          }`,
         );
         return next(error);
       }
@@ -157,7 +161,9 @@ module.exports.updateAvatar = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
         const error = new BadRequestError(
-          `Некорректная ссылка на картинку или некорректный id - ${err.name}`,
+          `Некорректная ссылка на картинку или некорректный id - ${
+            err.name - err.message
+          }`,
         );
         return next(error);
       }
