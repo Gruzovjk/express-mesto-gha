@@ -1,6 +1,4 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
 const { celebrate, Joi } = require('celebrate');
-// eslint-disable-next-line import/no-extraneous-dependencies
 const { regex } = require('../utils/regex');
 
 const validateSignUp = celebrate({
@@ -9,7 +7,7 @@ const validateSignUp = celebrate({
     about: Joi.string().min(2).max(30),
     avatar: Joi.string().pattern(regex),
     email: Joi.string().required().email(),
-    password: Joi.string().required().min(8).max(30),
+    password: Joi.string().required(),
   }),
 });
 
@@ -22,14 +20,14 @@ const validateSignIn = celebrate({
 
 const validateUpdateProfile = celebrate({
   body: Joi.object().keys({
-    name: Joi.string().min(2).max(30),
-    about: Joi.string().min(2).max(30),
+    name: Joi.string().required().min(2).max(30),
+    about: Joi.string().required().min(2).max(30),
   }),
 });
 
 const validateUpdateAvatar = celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string().pattern(regex),
+    avatar: Joi.string().required().pattern(regex),
   }),
 });
 
@@ -40,17 +38,11 @@ const validateCardCreate = celebrate({
   }),
 });
 
-// const validateUserId = celebrate({
-//   body: Joi.object().keys({
-//     userId: Joi.string().hex().length(24),
-//   }),
-// });
-
-// const validateCardId = celebrate({
-//   body: Joi.object().keys({
-//     cardId: Joi.string().hex().length(24),
-//   }),
-// });
+const validateId = celebrate({
+  params: Joi.object().keys({
+    id: Joi.string().hex().length(24),
+  }),
+});
 
 module.exports = {
   validateSignUp,
@@ -58,6 +50,5 @@ module.exports = {
   validateUpdateProfile,
   validateUpdateAvatar,
   validateCardCreate,
-  // validateUserId,
-  // validateCardId,
+  validateId,
 };

@@ -1,7 +1,9 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
+/* eslint-disable function-paren-newline */
+/* eslint-disable implicit-arrow-linebreak */
+/* eslint-disable object-curly-newline */
+/* eslint-disable import/order */
 const { hash } = require('bcrypt');
 const User = require('../models/user');
-// eslint-disable-next-line import/order
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
@@ -35,8 +37,7 @@ module.exports.getUserById = (req, res, next) => {
         return next(error);
       }
       return next(err);
-    })
-    .catch(next);
+    });
 };
 
 module.exports.getCurrentUser = (req, res, next) => {
@@ -52,7 +53,6 @@ module.exports.getCurrentUser = (req, res, next) => {
 };
 
 module.exports.createUser = (req, res, next) => {
-  // eslint-disable-next-line object-curly-newline
   const { name, about, avatar, email } = req.body;
   hash(req.body.password, 10)
     .then((dataHash) => {
@@ -63,22 +63,19 @@ module.exports.createUser = (req, res, next) => {
         email,
         password: dataHash,
       })
-        .then(
-          (user) =>
-            // eslint-disable-next-line implicit-arrow-linebreak
-            res.status(200).send({
-              name: user.name,
-              about: user.about,
-              avatar: user.avatar,
-              email: user.email,
-              _id: user._id,
-            }),
-          // eslint-disable-next-line function-paren-newline
+        .then((user) =>
+          res.status(200).send({
+            name: user.name,
+            about: user.about,
+            avatar: user.avatar,
+            email: user.email,
+            _id: user._id,
+          }),
         )
         .catch((err) => {
-          if (err.name === 'ValidationError' || err.name === 'CastError') {
+          if (err.name === 'ValidationError') {
             const error = new BadRequestError(
-              'Некорректный id или неправильно заполнены поля',
+              `Некорректный id или неправильно заполнены поля - ${err.name}`,
             );
             return next(error);
           }
@@ -135,13 +132,12 @@ module.exports.updateProfile = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
         const error = new BadRequestError(
-          'Некорректный id или неправильно заполнены поля',
+          `Некорректный id или неправильно заполнены поля - ${err.name}`,
         );
         return next(error);
       }
       return next(err);
-    })
-    .catch(next);
+    });
 };
 
 module.exports.updateAvatar = (req, res, next) => {
@@ -160,10 +156,11 @@ module.exports.updateAvatar = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
-        const error = new BadRequestError('Некорректная ссылка на картинку');
+        const error = new BadRequestError(
+          `Некорректная ссылка на картинку или некорректный id - ${err.name}`,
+        );
         return next(error);
       }
       return next(err);
-    })
-    .catch(next);
+    });
 };
