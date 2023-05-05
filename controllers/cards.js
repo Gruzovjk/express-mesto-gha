@@ -19,7 +19,7 @@ module.exports.createCard = (req, res, next) => {
   Card.create({ name, link, owner: req.user._id })
     .then((card) => res.status(200).send({ card }))
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
         const error = new BadRequestError(
           `Переданы некорректные данные - ${err.name - err.message}`,
         );
