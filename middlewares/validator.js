@@ -1,5 +1,15 @@
 const { celebrate, Joi } = require('celebrate');
+const validator = require('validator');
 const { regex } = require('../utils/regex');
+const { BadRequestError } = require('../errors/index');
+
+const validateUrl = (url) => {
+  const result = validator.isURL(url);
+  if (result) {
+    return url;
+  }
+  throw new BadRequestError('Неккоректная ссылка на изображение');
+};
 
 const validateSignUp = celebrate({
   body: Joi.object().keys({
@@ -34,7 +44,7 @@ const validateUpdateAvatar = celebrate({
 const validateCardCreate = celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
-    link: Joi.string().required().pattern(regex),
+    link: Joi.string().required().custom(validateUrl),
   }),
 });
 
