@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const { validateSignUp, validateSignIn } = require('../middlewares/validator');
+const { NotFoundError } = require('../errors/index');
 
 const usersRoutes = require('./users');
 const cardsRoutes = require('./cards');
@@ -10,8 +11,8 @@ router.post('/signup', validateSignUp, createUser);
 router.post('/signin', validateSignIn, login);
 router.use('/users', auth, usersRoutes);
 router.use('/cards', auth, cardsRoutes);
-router.use('*', auth, (req, res) => {
-  res.status(404).send({ message: 'По указанному url ничего нет' });
+router.use('*', auth, () => {
+  throw new NotFoundError('По указанному URL ничего нет');
 });
 
 module.exports = router;
