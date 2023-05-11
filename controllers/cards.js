@@ -42,7 +42,7 @@ module.exports.removeCardById = (req, res, next) => {
         return next(error);
       }
       return card
-        .remove()
+        .deleteOne()
         .then(() =>
           res.status(200).send({ message: 'Карточка успешно удалена' }),
         );
