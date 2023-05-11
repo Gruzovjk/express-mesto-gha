@@ -1,3 +1,5 @@
+/* eslint-disable function-paren-newline */
+/* eslint-disable implicit-arrow-linebreak */
 const Card = require('../models/card');
 
 const {
@@ -18,17 +20,18 @@ module.exports.createCard = (req, res, next) => {
     .then((card) => res.status(200).send({ card }))
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
-        const error = new BadRequestError('Некорректная ссылка на картинку');
+        const error = new BadRequestError(
+          `Переданы некорректные данные - ${err.name - err.message}`,
+        );
         return next(error);
       }
       return next(err);
-    })
-    .catch(next);
+    });
 };
 
 module.exports.removeCardById = (req, res, next) => {
   const cardId = req.params.id;
-  Card.findByIdAndDelete(cardId)
+  Card.findById(cardId)
     .then((card) => {
       if (!card) {
         const error = new NotFoundError('Карточка с таким id не найдена');
@@ -38,7 +41,11 @@ module.exports.removeCardById = (req, res, next) => {
         const error = new ForbiddenError('Нельзя удалить чужую карточку');
         return next(error);
       }
-      return res.status(200).send({ message: 'Карточка успешно удалена' });
+      return card
+        .deleteOne()
+        .then(() =>
+          res.status(200).send({ message: 'Карточка успешно удалена' }),
+        );
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -46,8 +53,7 @@ module.exports.removeCardById = (req, res, next) => {
         return next(error);
       }
       return next(err);
-    })
-    .catch(next);
+    });
 };
 
 module.exports.likeCard = (req, res, next) => {
@@ -69,8 +75,7 @@ module.exports.likeCard = (req, res, next) => {
         return next(error);
       }
       return next(err);
-    })
-    .catch(next);
+    });
 };
 
 module.exports.dislikeCard = (req, res, next) => {
@@ -92,6 +97,5 @@ module.exports.dislikeCard = (req, res, next) => {
         return next(error);
       }
       return next(err);
-    })
-    .catch(next);
+    });
 };

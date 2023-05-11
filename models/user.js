@@ -1,9 +1,6 @@
 const mongoose = require('mongoose');
-// eslint-disable-next-line import/no-extraneous-dependencies
 const validator = require('validator');
-// eslint-disable-next-line import/no-extraneous-dependencies
 const { compare } = require('bcrypt');
-// const { AuthError } = require('../errors/index');
 const { regex } = require('../utils/regex');
 const { UnauthorizedError } = require('../errors/index');
 
