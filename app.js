@@ -22,11 +22,7 @@ const { requestsLogger, errorsLogger } = require('./middlewares/logger');
 const app = express();
 app.use(
   cors({
-    origin: [
-      'http://localhost:3001',
-      'http://localhost:3000',
-      'https://filimonov.mesto.nomoredomains.rocks',
-    ],
+    origin: ['https://filimonov.mesto.nomoredomains.rocks'],
     credentials: true,
     maxAge: 30,
   }),
@@ -41,6 +37,11 @@ app.use(cookieParser());
 app.use(helmet());
 app.use(limiter);
 
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
 app.use(require('./routes'));
 
 app.use(errorsLogger);
