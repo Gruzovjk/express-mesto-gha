@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable import/order */
 require('dotenv').config();
 const express = require('express');
@@ -8,6 +9,7 @@ const cookieParser = require('cookie-parser');
 const { errors } = require('celebrate');
 const errorsHandler = require('./middlewares/errorsHandler');
 const rateLimit = require('express-rate-limit');
+const cors = require('cors');
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -18,6 +20,17 @@ const limiter = rateLimit({
 const { requestsLogger, errorsLogger } = require('./middlewares/logger');
 
 const app = express();
+app.use(
+  cors({
+    origin: [
+      'http://localhost:3001',
+      'http://localhost:3000',
+      'https://filimonov.mesto.nomoredomains.rocks',
+    ],
+    credentials: true,
+    maxAge: 30,
+  }),
+);
 const { PORT, DB_CONN } = process.env;
 mongoose.connect(DB_CONN);
 

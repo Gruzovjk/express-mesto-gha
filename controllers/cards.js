@@ -10,14 +10,14 @@ const {
 
 module.exports.getCards = (req, res, next) => {
   Card.find({})
-    .then((cards) => res.status(200).send({ cards }))
+    .then((cards) => res.status(200).send(cards))
     .catch(next);
 };
 
 module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
   Card.create({ name, link, owner: req.user._id })
-    .then((card) => res.status(200).send({ card }))
+    .then((card) => res.status(201).send(card))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         const error = new BadRequestError(
@@ -62,12 +62,13 @@ module.exports.likeCard = (req, res, next) => {
     { $addToSet: { likes: req.user._id } },
     { new: true },
   )
+    // .populate('likes')
     .then((card) => {
       if (!card) {
         const error = new NotFoundError('Карточка с таким id не найдена');
         return next(error);
       }
-      return res.status(200).send({ card, message: 'Лайк поставлен' });
+      return res.status(200).send(card);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -84,12 +85,13 @@ module.exports.dislikeCard = (req, res, next) => {
     { $pull: { likes: req.user._id } },
     { new: true },
   )
+    // .populate('likes')
     .then((card) => {
       if (!card) {
         const error = new NotFoundError('Карточка с таким id не найдена');
         return next(error);
       }
-      return res.status(200).send({ card, message: 'Лайк убран' });
+      return res.status(200).send(card);
     })
     .catch((err) => {
       if (err.name === 'CastError') {

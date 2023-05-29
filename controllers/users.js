@@ -17,7 +17,7 @@ const { NODE_ENV, JWT_SECRET } = process.env;
 
 module.exports.getUsers = (req, res, next) => {
   User.find({})
-    .then((users) => res.status(200).send({ users }))
+    .then((users) => res.status(200).send(users))
     .catch(next);
 };
 
@@ -29,7 +29,7 @@ module.exports.getUserById = (req, res, next) => {
         const error = new NotFoundError('Пользователь с таким id не найден');
         return next(error);
       }
-      return res.status(200).send({ user });
+      return res.status(200).send(user);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -47,7 +47,7 @@ module.exports.getCurrentUser = (req, res, next) => {
         const error = new NotFoundError('Пользователь с таким id не найден');
         return next(error);
       }
-      return res.send({ user });
+      return res.send(user);
     })
     .catch(next);
 };
@@ -64,7 +64,7 @@ module.exports.createUser = (req, res, next) => {
         password: dataHash,
       })
         .then((user) =>
-          res.status(200).send({
+          res.status(201).send({
             name: user.name,
             about: user.about,
             avatar: user.avatar,
@@ -109,7 +109,7 @@ module.exports.login = (req, res, next) => {
           httpOnly: true,
           sameSite: true,
         })
-        .send({ token });
+        .send(user.toJSON());
     })
     .catch(next);
 };
@@ -127,7 +127,7 @@ module.exports.updateProfile = (req, res, next) => {
         const error = new NotFoundError('Пользователь с таким id не найден');
         return next(error);
       }
-      return res.status(200).send({ user });
+      return res.status(200).send(user);
     })
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
@@ -154,7 +154,7 @@ module.exports.updateAvatar = (req, res, next) => {
         const error = new NotFoundError('Пользователь с таким id не найден');
         return next(error);
       }
-      return res.status(200).send({ user });
+      return res.status(200).send(user);
     })
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
